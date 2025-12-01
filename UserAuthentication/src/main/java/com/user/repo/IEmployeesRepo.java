@@ -6,4 +6,5 @@ import com.user.entity.Employees;
 
 public interface IEmployeesRepo extends JpaRepository<Employees, Long> {
 
+	Employees findByEmail(String email);
 }

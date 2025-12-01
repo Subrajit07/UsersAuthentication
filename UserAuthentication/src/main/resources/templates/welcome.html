@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Congrats buddy</title>
+ <style>
+        .container {
+            font-family: Arial, sans-serif;
+            padding: 10px;
+        }
+        .title {
+            font-size: 25px;
+            font-weight: bold;
+        }
+        .message {
+            margin-top: 10px;
+            font-size: medium;
+        }
+    </style>
+</head>
+<body>
+	<div class="container">
+	    <p class="title">Hello [[${name}]],</p>
+	
+	    <p class="message">
+	        Your account has been successfully created.<br>
+	        Welcome to [[${companyName}]] !
+	    </p>
+	    
+    <p>
+        Regards,<br>
+        HR Team
+    </p>
+</div>
+</body>
+</html>

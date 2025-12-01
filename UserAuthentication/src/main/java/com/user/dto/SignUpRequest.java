@@ -18,8 +18,9 @@ public record SignUpRequest(@NotBlank(message = "Firstname must required")
 															@Size(min = 8,message = "Confirm password should be above 8 characters")
 															String confirmPassword,
 															@NotBlank(message="phone number can not be blank")
-															@Size(min=8,message = "Invalid mobile number")
-															Long phoneNumber
+															String phoneNumber,
+															@NotBlank(message = "Company name cannot be blank")
+															String companyName
 														) {
 
 }

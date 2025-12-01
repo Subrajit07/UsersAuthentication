@@ -21,7 +21,7 @@ CREATE TABLE user_roles(
 	created_by BIGINT,
 	PRIMARY KEY (user_id, role),
 	FOREIGN KEY (user_id) REFERENCES users(id),
-	CONSTRAINT fk_valid_role CHECK (role IN ('ADMIN', 'MANAGER', 'EMPLOYEE','NON_EMPLOYEE'))
+	CONSTRAINT fk_valid_role CHECK (role IN ('ADMIN', 'MANAGER', 'EMPLOYEE','GUEST'))
 );
 CREATE INDEX indx_user_roles_userid ON user_roles(user_id);
 CREATE INDEX indx_user_roles_role ON user_roles(role);

@@ -6,17 +6,18 @@ import java.util.Date;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import com.user.entity.Users;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 
-@Configuration
+@Component
 @RequiredArgsConstructor
 public class JwtUtils {
 
@@ -38,7 +39,7 @@ public class JwtUtils {
 								.setExpiration(expireTime)
 								.setSubject(user.getUsername())
 								.setIssuedAt(now)
-								.signWith(getSignInKey(), SignatureAlgorithm.HS512)
+								.signWith(getSignInKey(), SignatureAlgorithm.HS256)
 								.compact();
 	}
 	
@@ -57,7 +58,8 @@ public class JwtUtils {
 	}
 	
 	private Key getSignInKey() {
-		return Keys.hmacShaKeyFor(securityKey.getBytes());
+		byte[] decode = Decoders.BASE64.decode(securityKey);
+		return Keys.hmacShaKeyFor(decode);
 	}
 
 }

@@ -5,6 +5,7 @@ import java.util.Set;
 import com.user.enums.UserRole;
 public record LoginResponse(Long userId,
 															String email,
+															String fullName,
 															String jwtToken,
 															Set<UserRole> roles
 															){

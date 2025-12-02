@@ -4,6 +4,7 @@ import java.time.OffsetDateTime;
 import java.util.Locale;
 import java.util.Map;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,8 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 import com.user.config.Common;
 import com.user.config.JwtUtils;
 import com.user.config.MailService;
+import com.user.dto.ForgotPasswordRequest;
+import com.user.dto.ForgotPasswordResponse;
 import com.user.dto.LoginRequest;
 import com.user.dto.LoginResponse;
 import com.user.dto.MailParameters;
@@ -46,6 +49,7 @@ public class UserAuthServiceImpl implements IUserAuthService {
 	private final JwtUtils jwtUtils;
 	private final SpringTemplateEngine templateEngine;
 
+	
 	@Override
 	public LoginResponse userLogin(LoginRequest loginRequest) {
 		Users user = userRepo.findByUsername(loginRequest.username())
@@ -87,6 +91,26 @@ public class UserAuthServiceImpl implements IUserAuthService {
 		
 		log.info("User signup successfully ! username :"+user.getUsername());
 		return new SignUpResponse(user.getId(), user.getUsername(), user.getUserRoles());
+	}
+
+	@Override
+	public void userLogout(){
+		SecurityContextHolder.clearContext();
+	}
+	
+	@Override
+	public ForgotPasswordResponse forgotPassword(ForgotPasswordRequest passwordRequest) {
+		Users user=userRepo.findByUsername(passwordRequest.username()).orElseThrow(()->{
+								log.error("Username not found !");
+								throw new UsernameNotFoundException("Invalid username");
+							});
+		if(passwordRequest.newPassword().equals(passwordRequest.confirmPassword())) {
+			user.setPassword(passwordEncoder.encode(passwordRequest.confirmPassword()));
+			userRepo.save(user);
+		}else {
+			throw new PasswordMismatchException("new-password & confirm password not matched!");
+		}
+		return new ForgotPasswordResponse(user.getUsername(), user.getPassword());
 	}
 
 	private Companies saveCompanyData(String companyName) {

@@ -42,7 +42,6 @@ public class Users extends BaseEntity{
 	private OffsetDateTime lastLoginAt;
 	private boolean accountLocked;
 	private OffsetDateTime accountLockedAt;
-	private String verificationEmailToken;
 	
 	@ElementCollection(fetch = FetchType.EAGER, targetClass = UserRole.class)
 	@CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))

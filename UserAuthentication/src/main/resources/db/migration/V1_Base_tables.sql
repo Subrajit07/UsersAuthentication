@@ -6,7 +6,6 @@ CREATE TABLE users(
 	last_login_at TIMESTAMP WITH TIME ZONE,
 	account_locked BOOLEAN NOT NULL DEFAULT false,
 	account_locked_at TIMESTAMP WITH TIME ZONE,
-	verification_email_token VARCHAR(255),
 	created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP WITH TIME ZONE
 );

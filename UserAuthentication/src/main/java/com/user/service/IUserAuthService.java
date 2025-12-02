@@ -1,5 +1,7 @@
 package com.user.service;
 
+import com.user.dto.ForgotPasswordRequest;
+import com.user.dto.ForgotPasswordResponse;
 import com.user.dto.LoginRequest;
 import com.user.dto.LoginResponse;
 import com.user.dto.SignUpRequest;
@@ -11,4 +13,7 @@ public interface IUserAuthService {
 	
 	SignUpResponse userSignUp(SignUpRequest signUpRequest);
 	
+	public void userLogout();
+	
+	ForgotPasswordResponse forgotPassword(ForgotPasswordRequest passwordRequest);
 }

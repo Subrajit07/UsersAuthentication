@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.user.dto.ForgotPasswordRequest;
+import com.user.dto.ForgotPasswordResponse;
 import com.user.dto.LoginRequest;
 import com.user.dto.LoginResponse;
 import com.user.dto.SignUpRequest;
@@ -33,5 +35,17 @@ public class UserAuthController {
 	public ResponseEntity<LoginResponse> userLogin(@RequestBody LoginRequest  request){
 		LoginResponse userLogin = userAuthService.userLogin(request);
 		return ResponseEntity.ok(userLogin);
+	}
+	
+	@PostMapping("/logout")
+	public ResponseEntity<String> userLogout(){
+		userAuthService.userLogout();
+		return ResponseEntity.ok("Logout successfully !");
+	}
+	
+	@PostMapping("/forgot_password")
+	public ResponseEntity<ForgotPasswordResponse> userResetPassword(@RequestBody ForgotPasswordRequest request){
+		ForgotPasswordResponse forgotPassword = userAuthService.forgotPassword(request);
+		return ResponseEntity.ok(forgotPassword);
 	}
 }

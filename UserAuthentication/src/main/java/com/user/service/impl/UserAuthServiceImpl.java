@@ -52,15 +52,16 @@ public class UserAuthServiceImpl implements IUserAuthService {
 	
 	@Override
 	public LoginResponse userLogin(LoginRequest loginRequest) {
-		Users user = userRepo.findByUsername(loginRequest.username())
+		Users user = userRepo.findByUsername(loginRequest.username().toLowerCase())
 												  .orElseThrow(()->new UsernameNotFoundException("User not found"));
 		if(!passwordEncoder.matches(loginRequest.password(), user.getPassword())) {
 			throw new RuntimeException("Invalid password");
 		}
 		user.setLastLoginAt(OffsetDateTime.now());
-		String token = jwtUtils.generateToken(user);
 		userRepo.save(user);
-		Employees emps=employeesRepo.findByEmail(user.getUsername());
+		Employees emps = employeesRepo.findByEmail(loginRequest.username())
+			    .orElseThrow(() -> new RuntimeException("Employee record not found"));
+		String token = jwtUtils.generateToken(user);
 		
 		return new LoginResponse(user.getId(),emps.getEmail(), emps.getFullName(), token, user.getUserRoles());
 	}
@@ -72,13 +73,16 @@ public class UserAuthServiceImpl implements IUserAuthService {
 			log.warn("User with username " + signUpRequest.email() + " is already exist");
 			throw new UserNameExistException("Username is already exist!");
 		}
+		if (employeesRepo.existsByEmail(signUpRequest.email())) {
+	        throw new RuntimeException("Employee email already exists");
+	    }
 		if (!signUpRequest.password().equals(signUpRequest.confirmPassword())) {
 			log.warn("Password & confirm password is not matched!");
 			throw new PasswordMismatchException("Confirm password does not match with password");
 		}
-		Users user = saveUserData(signUpRequest.email(), signUpRequest.password());
-		Employees employee = saveEmployeeData(signUpRequest.firstName(), signUpRequest.lastName(), signUpRequest.email(), signUpRequest.phoneNumber());
-		Companies company = saveCompanyData(signUpRequest.companyName());
+		Users user = saveUserData(signUpRequest.email().toLowerCase(), signUpRequest.password());
+		Employees employee = saveEmployeeData(signUpRequest.firstName(), signUpRequest.lastName(), signUpRequest.email().toLowerCase(), signUpRequest.phoneNumber());
+		saveCompanyData(signUpRequest.companyName());
 		Map<String, Object> data=Map.of("name",signUpRequest.firstName(),
 																			"companyName",signUpRequest.companyName());
 		String renderToTemplate = renderToTemplate("welcome.html", data);
